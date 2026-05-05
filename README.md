@@ -9,6 +9,8 @@ The app reads events from the local macOS Calendar database through EventKit. It
 - Shows the next meeting in the macOS menu bar.
 - Lists today's upcoming non-all-day events in the menu dropdown.
 - Sends local notifications at 10 minutes before, 5 minutes before, and meeting start.
+- Shows a custom popup before meetings.
+- Supports configurable popup offsets from the menu bar, defaulting to 5 minutes and 1 minute before meeting start.
 - Refreshes every 60 seconds and when macOS reports calendar changes.
 - Builds to a local `.app` bundle and `.dmg`.
 
@@ -61,6 +63,28 @@ During development, you can reset Calendar permission for this bundle ID:
 tccutil reset Calendar com.iqbaldp.meeting-reminder
 ```
 
+## Popup Reminders
+
+Popup reminders are controlled from the menu bar under `Popup`.
+
+Default enabled offsets:
+
+```text
+5 minutes before
+1 minute before
+```
+
+Available offsets:
+
+```text
+10 minutes before
+5 minutes before
+1 minute before
+At meeting start
+```
+
+The app remembers popup settings locally through `UserDefaults`.
+
 ## Distribution Notes
 
 The scripts use ad hoc signing for local testing. A GitHub DMG built this way can still trigger macOS Gatekeeper warnings on other machines.
@@ -71,6 +95,5 @@ For smoother public distribution outside the App Store, use an Apple Developer I
 
 - Google Calendar must already be synced into macOS Calendar.
 - No direct Google Calendar API support.
-- No custom popup window yet.
 - No launch-at-login yet.
-- No configurable reminder offsets yet.
+- Notification offsets are not configurable yet.

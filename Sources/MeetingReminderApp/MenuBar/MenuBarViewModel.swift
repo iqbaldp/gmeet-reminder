@@ -12,15 +12,23 @@ final class MenuBarViewModel: ObservableObject {
     @Published private(set) var lastRefreshDate: Date?
     @Published private(set) var isRefreshing = false
 
+    let popupSettingsStore: PopupSettingsStore
+
     private let calendarService: CalendarService
     private let notificationService: NotificationService
+    private let popupPresenter: PopupPresenter
+    private let shownPopupIdentifiersKey = "shownPopupIdentifiers"
     private var refreshTimer: Timer?
     private var calendarObserver: NSObjectProtocol?
     private var hasStarted = false
+    private var shownPopupIdentifiers: Set<String>
 
     init() {
         calendarService = CalendarService()
         notificationService = NotificationService()
+        popupSettingsStore = PopupSettingsStore()
+        popupPresenter = PopupPresenter()
+        shownPopupIdentifiers = Set(UserDefaults.standard.stringArray(forKey: shownPopupIdentifiersKey) ?? [])
     }
 
     func start() {
@@ -70,6 +78,8 @@ final class MenuBarViewModel: ObservableObject {
         menuBarTitle = MeetingDisplayFormatter.menuBarTitle(for: events.first, now: now)
         lastRefreshDate = now
 
+        showDuePopups(events: events, now: now)
+
         if notificationPermissionState.canSendAlerts {
             await notificationService.synchronize(plans: plans)
         }
@@ -87,5 +97,33 @@ final class MenuBarViewModel: ObservableObject {
         calendarPermissionState = await calendarService.requestAccessIfNeeded()
         notificationPermissionState = await notificationService.requestAccessIfNeeded()
         await refresh()
+    }
+
+    private func showDuePopups(events: [CalendarEvent], now: Date) {
+        let duePopups = PopupScheduler.duePopups(
+            for: events,
+            offsetsInMinutes: popupSettingsStore.offsetsInMinutes,
+            shownIdentifiers: shownPopupIdentifiers,
+            now: now
+        )
+
+        for popup in duePopups {
+            shownPopupIdentifiers.insert(popup.identifier)
+            popupPresenter.show(popup) { [weak self] in
+                self?.openCalendar()
+            }
+        }
+
+        persistShownPopupIdentifiers()
+    }
+
+    private func persistShownPopupIdentifiers() {
+        let identifiers = Array(shownPopupIdentifiers)
+
+        if identifiers.count > 500 {
+            shownPopupIdentifiers = Set(identifiers.suffix(250))
+        }
+
+        UserDefaults.standard.set(Array(shownPopupIdentifiers), forKey: shownPopupIdentifiersKey)
     }
 }

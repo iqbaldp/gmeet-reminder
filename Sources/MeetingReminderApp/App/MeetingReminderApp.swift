@@ -14,7 +14,7 @@ struct MeetingReminderApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            MenuBarView(viewModel: viewModel)
+            MenuBarView(viewModel: viewModel, popupSettingsStore: viewModel.popupSettingsStore)
         } label: {
             Text(viewModel.menuBarTitle)
         }

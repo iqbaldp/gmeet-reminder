@@ -3,6 +3,7 @@ import MeetingReminderCore
 
 struct MenuBarView: View {
     @ObservedObject var viewModel: MenuBarViewModel
+    @ObservedObject var popupSettingsStore: PopupSettingsStore
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -36,6 +37,25 @@ struct MenuBarView: View {
 
             Divider()
 
+            Section("Popup") {
+                ForEach(PopupSettingsStore.supportedOffsets, id: \.self) { offset in
+                    Toggle(popupOffsetLabel(for: offset), isOn: Binding(
+                        get: {
+                            popupSettingsStore.isEnabled(offset)
+                        },
+                        set: { isEnabled in
+                            popupSettingsStore.setOffset(offset, isEnabled: isEnabled)
+                        }
+                    ))
+                }
+
+                Button("Reset Popup Defaults") {
+                    popupSettingsStore.resetDefaults()
+                }
+            }
+
+            Divider()
+
             Text(MeetingDisplayFormatter.lastRefreshText(for: viewModel.lastRefreshDate))
 
             Button(viewModel.isRefreshing ? "Refreshing..." : "Refresh Now") {
@@ -53,5 +73,13 @@ struct MenuBarView: View {
                 viewModel.quit()
             }
         }
+    }
+
+    private func popupOffsetLabel(for offset: Int) -> String {
+        if offset == 0 {
+            return "At meeting start"
+        }
+
+        return "\(offset) minutes before"
     }
 }
