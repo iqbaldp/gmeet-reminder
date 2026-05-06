@@ -39,7 +39,7 @@ struct MenuBarView: View {
 
             Section("Popup") {
                 ForEach(PopupSettingsStore.supportedOffsets, id: \.self) { offset in
-                    Toggle(popupOffsetLabel(for: offset), isOn: Binding(
+                    Toggle(offset.displayText, isOn: Binding(
                         get: {
                             popupSettingsStore.isEnabled(offset)
                         },
@@ -73,13 +73,5 @@ struct MenuBarView: View {
                 viewModel.quit()
             }
         }
-    }
-
-    private func popupOffsetLabel(for offset: Int) -> String {
-        if offset == 0 {
-            return "At meeting start"
-        }
-
-        return "\(offset) minutes before"
     }
 }

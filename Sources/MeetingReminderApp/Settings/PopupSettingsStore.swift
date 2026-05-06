@@ -3,40 +3,54 @@ import MeetingReminderCore
 
 @MainActor
 final class PopupSettingsStore: ObservableObject {
-    static let supportedOffsets = [10, 5, 1, 0]
+    static let supportedOffsets: [PopupOffset] = [
+        .minutes(10),
+        .minutes(5),
+        .minutes(1),
+        .seconds(10),
+        .seconds(0)
+    ]
 
-    @Published private(set) var offsetsInMinutes: [Int]
+    @Published private(set) var offsets: [PopupOffset]
 
     private let defaults: UserDefaults
-    private let key = "popupOffsetsInMinutes"
+    private let secondsKey = "popupOffsetsInSeconds"
+    private let legacyMinutesKey = "popupOffsetsInMinutes"
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
 
-        let storedOffsets = defaults.array(forKey: key) as? [Int] ?? []
+        let storedSeconds = defaults.array(forKey: secondsKey) as? [Int] ?? []
+        let legacyMinutes = defaults.array(forKey: legacyMinutesKey) as? [Int] ?? []
+        let storedOffsets = storedSeconds.map(PopupOffset.seconds) + legacyMinutes.map(PopupOffset.minutes)
         let normalizedOffsets = PopupScheduler.normalizedOffsets(storedOffsets)
-        offsetsInMinutes = normalizedOffsets.isEmpty ? PopupScheduler.defaultOffsets : normalizedOffsets
+        offsets = normalizedOffsets.isEmpty ? PopupScheduler.defaultOffsets : normalizedOffsets
     }
 
-    func isEnabled(_ offset: Int) -> Bool {
-        offsetsInMinutes.contains(offset)
+    func isEnabled(_ offset: PopupOffset) -> Bool {
+        offsets.contains(offset)
     }
 
-    func setOffset(_ offset: Int, isEnabled: Bool) {
-        var offsets = Set(offsetsInMinutes)
+    func setOffset(_ offset: PopupOffset, isEnabled: Bool) {
+        var nextOffsets = Set(offsets)
 
         if isEnabled {
-            offsets.insert(offset)
+            nextOffsets.insert(offset)
         } else {
-            offsets.remove(offset)
+            nextOffsets.remove(offset)
         }
 
-        offsetsInMinutes = PopupScheduler.normalizedOffsets(Array(offsets))
-        defaults.set(offsetsInMinutes, forKey: key)
+        offsets = PopupScheduler.normalizedOffsets(Array(nextOffsets))
+        persist()
     }
 
     func resetDefaults() {
-        offsetsInMinutes = PopupScheduler.defaultOffsets
-        defaults.set(offsetsInMinutes, forKey: key)
+        offsets = PopupScheduler.defaultOffsets
+        persist()
+    }
+
+    private func persist() {
+        defaults.set(offsets.map(\.secondsBeforeStart), forKey: secondsKey)
+        defaults.removeObject(forKey: legacyMinutesKey)
     }
 }

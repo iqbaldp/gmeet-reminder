@@ -44,7 +44,7 @@ final class MenuBarViewModel: ObservableObject {
             }
         }
 
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 await self?.refresh()
             }
@@ -102,7 +102,7 @@ final class MenuBarViewModel: ObservableObject {
     private func showDuePopups(events: [CalendarEvent], now: Date) {
         let duePopups = PopupScheduler.duePopups(
             for: events,
-            offsetsInMinutes: popupSettingsStore.offsetsInMinutes,
+            offsets: popupSettingsStore.offsets,
             shownIdentifiers: shownPopupIdentifiers,
             now: now
         )

@@ -71,14 +71,20 @@ public final class CalendarService {
                 !event.isAllDay && event.endDate > now
             }
             .map { event in
-                CalendarEvent(
+                let meetingURL = MeetingLinkExtractor.extract(
+                    url: event.url,
+                    location: event.location,
+                    notes: event.notes
+                )
+
+                return CalendarEvent(
                     id: event.eventIdentifier ?? event.calendarItemIdentifier,
                     title: event.title ?? "",
                     startDate: event.startDate,
                     endDate: event.endDate,
                     calendarTitle: event.calendar.title,
                     isAllDay: event.isAllDay,
-                    url: event.url
+                    url: meetingURL
                 )
             }
             .sorted { left, right in

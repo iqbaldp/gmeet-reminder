@@ -6,7 +6,7 @@ import MeetingReminderCore
 final class PopupPresenter {
     private var panels: [String: NSPanel] = [:]
 
-    func show(_ popup: PopupPlan, openCalendar: @escaping () -> Void) {
+    func show(_ popup: PopupPlan, openFallbackCalendar: @escaping () -> Void) {
         if panels[popup.identifier] != nil {
             return
         }
@@ -30,8 +30,13 @@ final class PopupPresenter {
                     panel?.close()
                     self?.panels.removeValue(forKey: popup.identifier)
                 },
-                onOpenCalendar: { [weak self, weak panel] in
-                    openCalendar()
+                onOpenMeeting: { [weak self, weak panel] in
+                    if let url = popup.event.url {
+                        NSWorkspace.shared.open(url)
+                    } else {
+                        openFallbackCalendar()
+                    }
+
                     panel?.close()
                     self?.panels.removeValue(forKey: popup.identifier)
                 }

@@ -11,7 +11,9 @@ The app reads events from the local macOS Calendar database through EventKit. It
 - Sends local notifications at 10 minutes before, 5 minutes before, and meeting start.
 - Shows a custom popup before meetings.
 - Supports configurable popup offsets from the menu bar, defaulting to 5 minutes and 1 minute before meeting start.
-- Refreshes every 60 seconds and when macOS reports calendar changes.
+- Supports a 10-second-before popup option.
+- Popup `Open Meeting` opens the detected meeting link in the default browser.
+- Refreshes every 10 seconds and when macOS reports calendar changes.
 - Builds to a local `.app` bundle and `.dmg`.
 
 ## Requirements
@@ -80,10 +82,13 @@ Available offsets:
 10 minutes before
 5 minutes before
 1 minute before
+10 seconds before
 At meeting start
 ```
 
 The app remembers popup settings locally through `UserDefaults`.
+
+When a meeting link is available in the event URL, location, or notes, the popup shows `Open Meeting` and opens it with the default browser. Known meeting links such as Google Meet, Zoom, and Microsoft Teams are preferred over generic calendar URLs.
 
 ## Distribution Notes
 
