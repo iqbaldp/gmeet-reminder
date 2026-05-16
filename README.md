@@ -8,21 +8,21 @@ Minimal macOS menu bar app for upcoming meeting reminders.
 
 The app reads events from the local macOS Calendar database through EventKit. It does not connect directly to Google Calendar. To use it with Google Calendar, add your Google account in macOS Internet Accounts or Calendar first, then make sure the events appear in the built-in Calendar app.
 
-![Meeting Reminder menu bar](docs/assets/menu-bar.png)
-
-## Screenshots
-
-![Meeting Reminder dropdown](docs/assets/dropdown.png)
-
-![Meeting Reminder popup](docs/assets/popup.png)
-
-![Meeting Reminder DMG](docs/assets/dmg.png)
-
 ## Why This Exists
 
 Calendar notifications are easy to miss when you are focused. Meeting Reminder keeps the next meeting visible in the menu bar and can show a small popup shortly before the meeting starts.
 
 The app is intentionally local-first: no Google OAuth, no backend, no analytics, and no calendar sync logic of its own.
+
+## Illustrations
+
+The images below are public-safe illustrations with demo data, not live product screenshots.
+
+![Meeting Reminder menu bar illustration](docs/assets/menu-bar.png)
+
+![Meeting Reminder popup illustration](docs/assets/popup.png)
+
+![Meeting Reminder DMG illustration](docs/assets/dmg.png)
 
 ## Features
 

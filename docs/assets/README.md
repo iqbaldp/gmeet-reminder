@@ -1,15 +1,17 @@
 # Assets
 
-Public-facing screenshots and generated screenshot sources live here.
+Public-facing illustrations and generated source files live here.
 
 Current files:
 
-- `menu-bar.png`: menu bar item showing an upcoming meeting.
-- `dropdown.png`: menu dropdown with upcoming meetings and popup settings.
-- `popup.png`: custom meeting popup with `Open Meeting`.
-- `dmg.png`: mounted DMG showing the app and `Applications` shortcut.
+- `menu-bar.png`: illustrative menu bar composition with demo data.
+- `dropdown.png`: illustrative dropdown composition with demo data.
+- `popup.png`: illustrative custom popup composition with demo data.
+- `dmg.png`: illustrative DMG install composition.
 
 Avoid exposing private meeting titles, attendees, or meeting links in screenshots.
+
+These are not live product screenshots. Replace them with real screenshots only after sanitizing all calendar data.
 
 Regenerate PNG files from SVG sources:
 
