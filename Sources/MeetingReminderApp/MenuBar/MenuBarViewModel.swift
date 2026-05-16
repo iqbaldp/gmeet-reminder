@@ -11,11 +11,15 @@ final class MenuBarViewModel: ObservableObject {
     @Published private(set) var notificationPermissionState: NotificationPermissionState = .notDetermined
     @Published private(set) var lastRefreshDate: Date?
     @Published private(set) var isRefreshing = false
+    @Published private(set) var launchAtLoginEnabled = false
+    @Published private(set) var launchAtLoginStatusText = "Launch at login disabled"
+    @Published private(set) var launchAtLoginErrorText: String?
 
     let popupSettingsStore: PopupSettingsStore
 
     private let calendarService: CalendarService
     private let notificationService: NotificationService
+    private let launchAtLoginService: LaunchAtLoginService
     private let popupPresenter: PopupPresenter
     private let shownPopupIdentifiersKey = "shownPopupIdentifiers"
     private var refreshTimer: Timer?
@@ -26,9 +30,11 @@ final class MenuBarViewModel: ObservableObject {
     init() {
         calendarService = CalendarService()
         notificationService = NotificationService()
+        launchAtLoginService = LaunchAtLoginService()
         popupSettingsStore = PopupSettingsStore()
         popupPresenter = PopupPresenter()
         shownPopupIdentifiers = Set(UserDefaults.standard.stringArray(forKey: shownPopupIdentifiersKey) ?? [])
+        refreshLaunchAtLoginState()
     }
 
     func start() {
@@ -93,6 +99,17 @@ final class MenuBarViewModel: ObservableObject {
         NSApp.terminate(nil)
     }
 
+    func setLaunchAtLoginEnabled(_ enabled: Bool) {
+        do {
+            try launchAtLoginService.setEnabled(enabled)
+            launchAtLoginErrorText = nil
+        } catch {
+            launchAtLoginErrorText = error.localizedDescription
+        }
+
+        refreshLaunchAtLoginState()
+    }
+
     private func bootstrap() async {
         calendarPermissionState = await calendarService.requestAccessIfNeeded()
         notificationPermissionState = await notificationService.requestAccessIfNeeded()
@@ -125,5 +142,10 @@ final class MenuBarViewModel: ObservableObject {
         }
 
         UserDefaults.standard.set(Array(shownPopupIdentifiers), forKey: shownPopupIdentifiersKey)
+    }
+
+    private func refreshLaunchAtLoginState() {
+        launchAtLoginEnabled = launchAtLoginService.isEnabled
+        launchAtLoginStatusText = launchAtLoginService.statusText
     }
 }

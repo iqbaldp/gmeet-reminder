@@ -11,6 +11,7 @@ MACOS_DIR="$CONTENTS_DIR/MacOS"
 RESOURCES_DIR="$CONTENTS_DIR/Resources"
 INFO_PLIST="$ROOT_DIR/Resources/Info.plist"
 ENTITLEMENTS="$ROOT_DIR/Resources/MeetingReminder.entitlements"
+APP_ICON="$ROOT_DIR/Resources/AppIcon.icns"
 
 swift build -c release --package-path "$ROOT_DIR"
 
@@ -19,6 +20,7 @@ mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
 
 cp "$ROOT_DIR/.build/release/$EXECUTABLE_NAME" "$MACOS_DIR/$EXECUTABLE_NAME"
 cp "$INFO_PLIST" "$CONTENTS_DIR/Info.plist"
+cp "$APP_ICON" "$RESOURCES_DIR/AppIcon.icns"
 chmod +x "$MACOS_DIR/$EXECUTABLE_NAME"
 
 codesign --force --deep --sign - --entitlements "$ENTITLEMENTS" "$APP_DIR"

@@ -13,8 +13,10 @@ The app reads events from the local macOS Calendar database through EventKit. It
 - Supports configurable popup offsets from the menu bar, defaulting to 5 minutes and 1 minute before meeting start.
 - Supports a 10-second-before popup option.
 - Popup `Open Meeting` opens the detected meeting link in the default browser.
+- Includes launch-at-login control from the menu bar.
+- Includes a custom app icon.
 - Refreshes every 10 seconds and when macOS reports calendar changes.
-- Builds to a local `.app` bundle and `.dmg`.
+- Builds to a local `.app` bundle and versioned `.dmg`.
 
 ## Requirements
 
@@ -47,8 +49,17 @@ The raw SwiftPM executable is not the recommended way to run the app because mac
 The DMG is created at:
 
 ```text
+dist/MeetingReminder-0.3.0.dmg
 dist/MeetingReminder.dmg
 ```
+
+The versioned file is the release artifact. `MeetingReminder.dmg` is a latest-build alias for quick local installs.
+
+## Install
+
+Open the DMG, then drag `Meeting Reminder.app` to `Applications`.
+
+Launch-at-login works best after the app is installed in `Applications`.
 
 ## Permissions
 
@@ -90,6 +101,16 @@ The app remembers popup settings locally through `UserDefaults`.
 
 When a meeting link is available in the event URL, location, or notes, the popup shows `Open Meeting` and opens it with the default browser. Known meeting links such as Google Meet, Zoom, and Microsoft Teams are preferred over generic calendar URLs.
 
+## Launch At Login
+
+Use the menu bar item:
+
+```text
+App > Launch at Login
+```
+
+macOS may require approval from System Settings depending on the app location and system policy.
+
 ## Distribution Notes
 
 The scripts use ad hoc signing for local testing. A GitHub DMG built this way can still trigger macOS Gatekeeper warnings on other machines.
@@ -100,5 +121,5 @@ For smoother public distribution outside the App Store, use an Apple Developer I
 
 - Google Calendar must already be synced into macOS Calendar.
 - No direct Google Calendar API support.
-- No launch-at-login yet.
 - Notification offsets are not configurable yet.
+- Builds are ad hoc signed unless you add Developer ID signing and notarization.

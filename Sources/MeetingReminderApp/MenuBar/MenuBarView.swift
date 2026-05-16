@@ -37,6 +37,25 @@ struct MenuBarView: View {
 
             Divider()
 
+            Section("App") {
+                Toggle("Launch at Login", isOn: Binding(
+                    get: {
+                        viewModel.launchAtLoginEnabled
+                    },
+                    set: { isEnabled in
+                        viewModel.setLaunchAtLoginEnabled(isEnabled)
+                    }
+                ))
+
+                Text(viewModel.launchAtLoginStatusText)
+
+                if let errorText = viewModel.launchAtLoginErrorText {
+                    Text(errorText)
+                }
+            }
+
+            Divider()
+
             Section("Popup") {
                 ForEach(PopupSettingsStore.supportedOffsets, id: \.self) { offset in
                     Toggle(offset.displayText, isOn: Binding(
