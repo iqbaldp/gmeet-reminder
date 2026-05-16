@@ -1,8 +1,18 @@
 # Meeting Reminder
 
+![macOS](https://img.shields.io/badge/macOS-14%2B-111827)
+![Swift](https://img.shields.io/badge/Swift-5.10-F05138)
+![License](https://img.shields.io/badge/license-MIT-0F766E)
+
 Minimal macOS menu bar app for upcoming meeting reminders.
 
 The app reads events from the local macOS Calendar database through EventKit. It does not connect directly to Google Calendar. To use it with Google Calendar, add your Google account in macOS Internet Accounts or Calendar first, then make sure the events appear in the built-in Calendar app.
+
+## Why This Exists
+
+Calendar notifications are easy to miss when you are focused. Meeting Reminder keeps the next meeting visible in the menu bar and can show a small popup shortly before the meeting starts.
+
+The app is intentionally local-first: no Google OAuth, no backend, no analytics, and no calendar sync logic of its own.
 
 ## Features
 
@@ -21,9 +31,19 @@ The app reads events from the local macOS Calendar database through EventKit. It
 ## Requirements
 
 - macOS 14 or newer.
-- Xcode command line tools.
+- Xcode command line tools for source builds.
 - Calendar access permission.
 - Notification permission.
+
+## Download
+
+For normal use, download the latest DMG from GitHub Releases and drag the app to `Applications`.
+
+Current local release artifact:
+
+```text
+dist/MeetingReminder-0.3.0.dmg
+```
 
 ## Build
 
@@ -76,6 +96,20 @@ During development, you can reset Calendar permission for this bundle ID:
 tccutil reset Calendar com.iqbaldp.meeting-reminder
 ```
 
+## Privacy
+
+Meeting Reminder reads calendar events through Apple's EventKit framework. It does not send calendar data anywhere.
+
+The app does not:
+
+- Use Google Calendar API directly
+- Ask for Google OAuth credentials
+- Run a backend service
+- Include telemetry or analytics
+- Upload meeting titles, attendees, links, notes, or times
+
+Local settings are stored with `UserDefaults`. See [Privacy](docs/privacy.md) for details.
+
 ## Popup Reminders
 
 Popup reminders are controlled from the menu bar under `Popup`.
@@ -116,6 +150,19 @@ macOS may require approval from System Settings depending on the app location an
 The scripts use ad hoc signing for local testing. A GitHub DMG built this way can still trigger macOS Gatekeeper warnings on other machines.
 
 For smoother public distribution outside the App Store, use an Apple Developer ID certificate and notarize the app before publishing the DMG.
+
+## Development
+
+Useful commands:
+
+```bash
+swift test
+./scripts/build-app.sh
+./scripts/build-dmg.sh
+./scripts/check-release.sh
+```
+
+See [Contributing](CONTRIBUTING.md) for scope and development notes.
 
 ## Known Limits
 
