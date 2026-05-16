@@ -1,8 +1,8 @@
 # Assets
 
-Add public-facing screenshots here before publishing the repository.
+Public-facing screenshots and generated screenshot sources live here.
 
-Recommended files:
+Current files:
 
 - `menu-bar.png`: menu bar item showing an upcoming meeting.
 - `dropdown.png`: menu dropdown with upcoming meetings and popup settings.
@@ -10,3 +10,9 @@ Recommended files:
 - `dmg.png`: mounted DMG showing the app and `Applications` shortcut.
 
 Avoid exposing private meeting titles, attendees, or meeting links in screenshots.
+
+Regenerate PNG files from SVG sources:
+
+```bash
+./scripts/generate-screenshots.sh
+```
