@@ -14,15 +14,15 @@ Calendar notifications are easy to miss when you are focused. Meeting Reminder k
 
 The app is intentionally local-first: no Google OAuth, no backend, no analytics, and no calendar sync logic of its own.
 
-## Illustrations
+## Screenshots
 
-The images below are public-safe illustrations with demo data, not live product screenshots.
+The images below are generated from the app's SwiftUI screenshot renderer with demo data, so they avoid exposing private calendar details.
 
-![Meeting Reminder menu bar illustration](docs/assets/menu-bar.png)
+![Meeting Reminder menu bar screenshot](docs/assets/menu-bar.png)
 
-![Meeting Reminder popup illustration](docs/assets/popup.png)
+![Meeting Reminder dropdown screenshot](docs/assets/dropdown.png)
 
-![Meeting Reminder DMG illustration](docs/assets/dmg.png)
+![Meeting Reminder popup screenshot](docs/assets/popup.png)
 
 ## Features
 

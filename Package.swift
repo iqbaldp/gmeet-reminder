@@ -9,6 +9,7 @@ let package = Package(
     ],
     products: [
         .executable(name: "MeetingReminderApp", targets: ["MeetingReminderApp"]),
+        .executable(name: "ScreenshotRenderer", targets: ["ScreenshotRenderer"]),
         .library(name: "MeetingReminderCore", targets: ["MeetingReminderCore"])
     ],
     targets: [
@@ -20,6 +21,11 @@ let package = Package(
             name: "MeetingReminderApp",
             dependencies: ["MeetingReminderCore"],
             path: "Sources/MeetingReminderApp"
+        ),
+        .executableTarget(
+            name: "ScreenshotRenderer",
+            dependencies: ["MeetingReminderCore"],
+            path: "Sources/ScreenshotRenderer"
         ),
         .testTarget(
             name: "MeetingReminderCoreTests",

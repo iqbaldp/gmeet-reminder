@@ -26,8 +26,10 @@ final class MenuBarViewModel: ObservableObject {
     private var calendarObserver: NSObjectProtocol?
     private var hasStarted = false
     private var shownPopupIdentifiers: Set<String>
+    private let isScreenshotMode: Bool
 
     init() {
+        isScreenshotMode = ProcessInfo.processInfo.environment["MEETING_REMINDER_SCREENSHOT_MODE"] == "1"
         calendarService = CalendarService()
         notificationService = NotificationService()
         launchAtLoginService = LaunchAtLoginService()
@@ -44,9 +46,11 @@ final class MenuBarViewModel: ObservableObject {
 
         hasStarted = true
 
-        calendarObserver = calendarService.observeChanges { [weak self] in
-            Task { @MainActor in
-                await self?.refresh()
+        if !isScreenshotMode {
+            calendarObserver = calendarService.observeChanges { [weak self] in
+                Task { @MainActor in
+                    await self?.refresh()
+                }
             }
         }
 
@@ -68,7 +72,7 @@ final class MenuBarViewModel: ObservableObject {
         }
 
         let now = Date()
-        calendarPermissionState = calendarService.permissionState
+        calendarPermissionState = isScreenshotMode ? .authorized : calendarService.permissionState
 
         guard calendarPermissionState.canReadEvents else {
             menuBarTitle = "Calendar access needed"
@@ -77,7 +81,7 @@ final class MenuBarViewModel: ObservableObject {
             return
         }
 
-        let events = calendarService.fetchUpcomingEvents(now: now)
+        let events = isScreenshotMode ? Self.screenshotEvents(now: now) : calendarService.fetchUpcomingEvents(now: now)
         let plans = ReminderScheduler.plans(for: events, now: now)
 
         upcomingEvents = events
@@ -86,7 +90,7 @@ final class MenuBarViewModel: ObservableObject {
 
         showDuePopups(events: events, now: now)
 
-        if notificationPermissionState.canSendAlerts {
+        if !isScreenshotMode && notificationPermissionState.canSendAlerts {
             await notificationService.synchronize(plans: plans)
         }
     }
@@ -111,8 +115,14 @@ final class MenuBarViewModel: ObservableObject {
     }
 
     private func bootstrap() async {
-        calendarPermissionState = await calendarService.requestAccessIfNeeded()
-        notificationPermissionState = await notificationService.requestAccessIfNeeded()
+        if isScreenshotMode {
+            calendarPermissionState = .authorized
+            notificationPermissionState = .authorized
+        } else {
+            calendarPermissionState = await calendarService.requestAccessIfNeeded()
+            notificationPermissionState = await notificationService.requestAccessIfNeeded()
+        }
+
         await refresh()
     }
 
@@ -147,5 +157,28 @@ final class MenuBarViewModel: ObservableObject {
     private func refreshLaunchAtLoginState() {
         launchAtLoginEnabled = launchAtLoginService.isEnabled
         launchAtLoginStatusText = launchAtLoginService.statusText
+    }
+
+    private static func screenshotEvents(now: Date) -> [CalendarEvent] {
+        [
+            CalendarEvent(
+                id: "demo-design-review",
+                title: "Design Review",
+                startDate: now.addingTimeInterval(60),
+                endDate: now.addingTimeInterval(1_860),
+                calendarTitle: "Work",
+                isAllDay: false,
+                url: URL(string: "https://meet.google.com/demo-meet-link")
+            ),
+            CalendarEvent(
+                id: "demo-weekly-sync",
+                title: "Weekly Sync",
+                startDate: now.addingTimeInterval(45 * 60),
+                endDate: now.addingTimeInterval(75 * 60),
+                calendarTitle: "Work",
+                isAllDay: false,
+                url: URL(string: "https://meet.google.com/demo-sync-link")
+            )
+        ]
     }
 }

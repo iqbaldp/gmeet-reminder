@@ -1,19 +1,18 @@
 # Assets
 
-Public-facing illustrations and generated source files live here.
+Public-facing app-rendered screenshots live here.
 
 Current files:
 
-- `menu-bar.png`: illustrative menu bar composition with demo data.
-- `dropdown.png`: illustrative dropdown composition with demo data.
-- `popup.png`: illustrative custom popup composition with demo data.
-- `dmg.png`: illustrative DMG install composition.
+- `menu-bar.png`: app-rendered menu bar screenshot with demo data.
+- `dropdown.png`: app-rendered dropdown screenshot with demo data.
+- `popup.png`: app-rendered popup screenshot with demo data.
 
 Avoid exposing private meeting titles, attendees, or meeting links in screenshots.
 
-These are not live product screenshots. Replace them with real screenshots only after sanitizing all calendar data.
+These screenshots are generated through `ScreenshotRenderer`, not by reading your real Calendar data.
 
-Regenerate PNG files from SVG sources:
+Regenerate PNG files:
 
 ```bash
 ./scripts/generate-screenshots.sh
