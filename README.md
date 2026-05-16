@@ -3,6 +3,7 @@
 ![macOS](https://img.shields.io/badge/macOS-14%2B-111827)
 ![Swift](https://img.shields.io/badge/Swift-5.10-F05138)
 ![License](https://img.shields.io/badge/license-MIT-0F766E)
+![CI](https://github.com/iqbaldp/google-meeting-reminder/actions/workflows/ci.yml/badge.svg)
 
 Minimal macOS menu bar app for upcoming meeting reminders.
 

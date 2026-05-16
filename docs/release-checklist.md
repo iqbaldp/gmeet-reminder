@@ -8,6 +8,7 @@
 - Run `swift test`.
 - Run `./scripts/build-dmg.sh`.
 - Run `./scripts/check-release.sh`.
+- Confirm `dist/SHA256SUMS.txt` exists.
 
 ## GitHub Release
 
